@@ -103,6 +103,7 @@ OPENAI_KEY="your_openai_key"
 ```
 
 To use local LLM, comment out `OPENAI_KEY` and instead uncomment `OPENAI_ENDPOINT` and `OPENAI_MODEL`:
+
 - Set `OPENAI_ENDPOINT` to the address of your local server (eg."http://localhost:1234/v1")
 - Set `OPENAI_MODEL` to the name of the model loaded in your local server.
 
@@ -111,7 +112,7 @@ To use local LLM, comment out `OPENAI_KEY` and instead uncomment `OPENAI_ENDPOIN
 1. Clone the repository
 2. Rename `.env.example` to `.env.local` and set your API keys
 
-3. Run `npm install`
+3. Run `docker build -f Dockerfile`
 
 4. Run the Docker image:
 
@@ -120,6 +121,7 @@ docker compose up -d
 ```
 
 5. Execute `npm run docker` in the docker service:
+
 ```bash
 docker exec -it deep-research npm run docker
 ```
@@ -146,13 +148,23 @@ The system will then:
 3. Recursively explore deeper based on findings
 4. Generate a comprehensive markdown report
 
-The final report will be saved as `output.md` in your working directory.
+The final report will be saved as `report.md` or `answer.md` in your working directory, depending on which modes you selected.
 
 ### Concurrency
 
-If you have a paid version of Firecrawl or a local version, feel free to increase the `ConcurrencyLimit` in `deep-research.ts` so it runs a lot faster.
+If you have a paid version of Firecrawl or a local version, feel free to increase the `ConcurrencyLimit` by setting the `CONCURRENCY_LIMIT` environment variable so it runs faster.
 
-If you have a free version, you may sometimes run into rate limit errors, you can reduce the limit (but it will run a lot slower).
+If you have a free version, you may sometimes run into rate limit errors, you can reduce the limit to 1 (but it will run a lot slower).
+
+### DeepSeek R1
+
+Deep research performs great on R1! We use [Fireworks](http://fireworks.ai) as the main provider for the R1 model. To use R1, simply set a Fireworks API key:
+
+```bash
+FIREWORKS_KEY="api_key"
+```
+
+The system will automatically switch over to use R1 instead of `o3-mini` when the key is detected.
 
 ### Custom endpoints and models
 
@@ -160,7 +172,7 @@ There are 2 other optional env vars that lets you tweak the endpoint (for other 
 
 ```bash
 OPENAI_ENDPOINT="custom_endpoint"
-OPENAI_MODEL="custom_model"
+CUSTOM_MODEL="custom_model"
 ```
 
 ## How It Works
@@ -186,6 +198,10 @@ OPENAI_MODEL="custom_model"
    - Compiles all findings into a comprehensive markdown report
    - Includes all sources and references
    - Organizes information in a clear, readable format
+  
+## Community implementations
+
+**Python**: https://github.com/Finance-LLMs/deep-research-python
 
 ## License
 
